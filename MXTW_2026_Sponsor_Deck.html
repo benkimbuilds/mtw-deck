@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mexico Tech Week 2026 — Sponsor Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════
+   1. RESET & VARIABLES
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  --bg:          #08080A;
+  --bg-card:     rgba(255,255,255,0.03);
+  --bg-card-solid: #111113;
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-border-hover: rgba(255,255,255,0.12);
+  --green:       #00E676;
+  --green-dim:   #00C853;
+  --green-glow:  rgba(0,230,118,0.15);
+  --pink:        #FF6B9D;
+  --pink-glow:   rgba(255,107,157,0.12);
+  --blue:        #4F8FE6;
+  --orange:      #FF5B29;
+  --yellow:      #FFD800;
+  --purple:      #9161F1;
+  --white:       #FFFFFF;
+  --text-primary:#F0F0F0;
+  --text-secondary:#8A8A8A;
+  --text-muted:  #555555;
+  --text-xmuted: #333333;
+  --font-head:   'Montserrat', system-ui, sans-serif;
+  --font-body:   'Inter', system-ui, sans-serif;
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --mx: 50vw;
+  --my: 50vh;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html {
+  background: var(--bg);
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-xmuted) transparent;
+}
+body::-webkit-scrollbar { width: 6px; }
+body::-webkit-scrollbar-track { background: transparent; }
+body::-webkit-scrollbar-thumb { background: var(--text-xmuted); border-radius: 3px; }
+body::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+body.loading { overflow: hidden; }
+body.loading main { opacity: 0; }
+
+::selection {
+  background: var(--green);
+  color: var(--bg);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   2. LOADER
+   ════════════════════════════════════════════════════════════════ */
+#loader {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+#loader .loader-brand {
+  font-family: var(--font-head); font-size: 28px; font-weight: 800;
+  letter-spacing: 0.2em; color: var(--white);
+  margin-bottom: 24px;
+  animation: loaderPulse 1.2s ease-in-out infinite;
+}
+#loader .loader-track {
+  width: 120px; height: 2px; background: var(--text-xmuted); border-radius: 1px;
+  overflow: hidden;
+}
+#loader .loader-fill {
+  height: 100%; width: 0; background: var(--green); border-radius: 1px;
+  animation: loaderFill 1.4s var(--ease-out) forwards;
+}
+@keyframes loaderFill { to { width: 100%; } }
+@keyframes loaderPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   3. NOISE GRAIN OVERLAY
+   ════════════════════════════════════════════════════════════════ */
+#noise {
+  position: fixed; inset: 0; z-index: 9998;
+  pointer-events: none;
+  opacity: 0.028;
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   4. CURSOR GLOW
+   ════════════════════════════════════════════════════════════════ */
+#cursor-glow {
+  position: fixed; z-index: 1;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(0,230,118,0.04) 0%, transparent 70%);
+  transform: translate(calc(var(--mx) - 400px), calc(var(--my) - 400px));
+  transition: transform 0.15s linear;
+  will-change: transform;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   5. SLIDE SYSTEM
+   ════════════════════════════════════════════════════════════════ */
+main {
+  transition: opacity 0.5s ease;
+}
+
+.slide {
+  width: 100vw; height: 100vh;
+  min-height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5vh 7vw;
+}
+
+/* Ambient slide glow layers */
+.slide .ambient {
+  position: absolute; border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none; z-index: 0;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.slide.in-view .ambient { opacity: 1; }
+
+/* Top accent bar */
+.slide .top-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 10;
+  background: var(--green);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1s var(--ease-out) 0.2s;
+}
+.slide.in-view .top-bar { transform: scaleX(1); }
+.slide .top-bar.pink { background: var(--pink); }
+
+/* Left accent strip */
+.slide .left-strip {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: 3px; z-index: 10;
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.8s var(--ease-out) 0.4s;
+}
+.slide.in-view .left-strip { transform: scaleY(1); }
+
+/* Bottom accent bar */
+.slide .bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; z-index: 10;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform 1s var(--ease-out) 0.3s;
+}
+.slide.in-view .bottom-bar { transform: scaleX(1); }
+
+/* ════════════════════════════════════════════════════════════════
+   6. NAVIGATION
+   ════════════════════════════════════════════════════════════════ */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--pink));
+  z-index: 9999;
+  width: 0;
+  transition: width 0.5s var(--ease-out);
+}
+
+#slide-nav {
+  position: fixed; right: 2vw; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+  z-index: 9999;
+}
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 3px;
+  background: var(--text-xmuted);
+  cursor: pointer;
+  transition: all 0.4s var(--ease-out);
+  position: relative;
+}
+.nav-dot:hover { background: var(--text-muted); }
+.nav-dot.active {
+  height: 28px;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green-glow);
+}
+.nav-dot .tooltip {
+  position: absolute; right: 20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-head);
+  font-size: 10px; font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.nav-dot:hover .tooltip { opacity: 1; }
+
+#slide-counter {
+  position: fixed; bottom: 2.5vh; right: 2.5vw;
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 500;
+  color: var(--text-muted);
+  z-index: 9999;
+  letter-spacing: 0.1em;
+}
+#slide-counter .current {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   7. TYPOGRAPHY
+   ════════════════════════════════════════════════════════════════ */
+.overline {
+  font-family: var(--font-head);
+  font-size: clamp(9px, 0.9vw, 12px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--green);
+  margin-bottom: 1.2em;
+  position: relative;
+  z-index: 2;
+}
+.overline.pink { color: var(--pink); }
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-head);
+  line-height: 1.1;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: clamp(38px, 5.5vw, 68px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.section-title {
+  font-size: clamp(26px, 3.5vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.body-lg {
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 58ch;
+  position: relative; z-index: 2;
+}
+
+.body-sm {
+  font-size: clamp(11px, 1vw, 14px);
+  color: var(--text-secondary);
+  line-height: 1.65;
+  position: relative; z-index: 2;
+}
+
+.accent-line {
+  height: 3px; border-radius: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.8s var(--ease-out);
+  position: relative; z-index: 2;
+}
+.accent-line.draw { transform: scaleX(1); }
+.accent-line.green { background: var(--green); }
+.accent-line.pink { background: var(--pink); }
+
+.text-green { color: var(--green); }
+.text-pink { color: var(--pink); }
+.text-gray { color: var(--text-secondary); }
+
+/* ════════════════════════════════════════════════════════════════
+   8. GLASSMORPHISM CARDS
+   ════════════════════════════════════════════════════════════════ */
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 1.6em;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+  z-index: 2;
+}
+.glass:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* Inner light effect on hover */
+.glass::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--card-mx, 50%) var(--card-my, 0%), rgba(255,255,255,0.04), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.glass:hover::before { opacity: 1; }
+
+/* Accent bar variants */
+.glass .bar-top {
+  position: absolute; top: 0; left: 1.2em; right: 1.2em;
+  height: 2px; border-radius: 0 0 2px 2px;
+}
+.glass .bar-left {
+  position: absolute; top: 1.2em; left: 0; bottom: 1.2em;
+  width: 2px; border-radius: 0 2px 2px 0;
+}
+
+.glass-title {
+  font-family: var(--font-head);
+  font-size: clamp(13px, 1.2vw, 17px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.5em;
+}
+
+.glass-body {
+  font-size: clamp(11px, 0.95vw, 14px);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   9. ENTRANCE ANIMATIONS
+   ════════════════════════════════════════════════════════════════ */
+
+/* Fade up */
+.anim {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out), filter 0.7s ease;
+  filter: blur(4px);
+}
+.anim.vis {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Scale in */
+.anim-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.anim-scale.vis {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Slide from left */
+.anim-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), filter 0.6s ease;
+  filter: blur(3px);
+}
+.anim-left.vis {
+  opacity: 1;
+  transform: translateX(0);
+  filter: blur(0);
+}
+
+/* Stagger delays */
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.16s; }
+.d3 { transition-delay: 0.24s; }
+.d4 { transition-delay: 0.32s; }
+.d5 { transition-delay: 0.40s; }
+.d6 { transition-delay: 0.48s; }
+.d7 { transition-delay: 0.56s; }
+.d8 { transition-delay: 0.64s; }
+
+/* ════════════════════════════════════════════════════════════════
+   10. FOOTER
+   ════════════════════════════════════════════════════════════════ */
+.slide-foot {
+  position: absolute; bottom: 2vh; left: 7vw;
+  font-family: var(--font-head);
+  font-size: 8px; font-weight: 600;
+  color: var(--text-xmuted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  z-index: 5;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   11. SLIDE-SPECIFIC LAYOUTS
+   ════════════════════════════════════════════════════════════════ */
+
+/* --- S1: Title --- */
+#s1 .content {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 5vw;
+  align-items: center;
+  height: 100%;
+  position: relative; z-index: 2;
+}
+#s1 .title-col { display: flex; flex-direction: column; justify-content: center; }
+#s1 .hero-title { margin-bottom: 0.08em; }
+#s1 .sub-label {
+  font-family: var(--font-head);
+  font-size: clamp(16px, 1.8vw, 22px);
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-top: 0.8em;
+}
+#s1 .photo-col {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+#s1 .photo-wrap {
+  position: relative;
+  width: 100%; max-width: 440px;
+}
+#s1 .photo-wrap .frame-bg {
+  position: absolute;
+  top: 10px; left: -10px; bottom: -10px; right: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  border-left: 3px solid var(--pink);
+}
+#s1 .photo-wrap img {
+  position: relative;
+  width: 100%; height: auto;
+  border-radius: 10px;
+  display: block;
+  object-fit: cover;
+  max-height: 78vh;
+  filter: saturate(1.1) contrast(1.05);
+  transition: filter 0.5s ease;
+}
+#s1 .photo-wrap:hover img {
+  filter: saturate(1.2) contrast(1.08);
+}
+
+/* --- S3: Stats --- */
+.photo-strip {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1vw; margin: 1.2em 0;
+}
+.photo-strip img {
+  width: 100%; aspect-ratio: 5/3; object-fit: cover;
+  border-radius: 10px; display: block;
+  filter: grayscale(80%) brightness(0.7);
+  transition: filter 1.2s var(--ease-out);
+}
+.slide.in-view .photo-strip img {
+  filter: grayscale(0%) brightness(1);
+}
+
+.stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.2vw; margin-top: 1.5em;
+}
+.stat-card .stat-dot {
+  width: 8px; height: 8px; border-radius: 2px;
+  margin-bottom: 0.7em;
+}
+.stat-card .stat-number {
+  font-family: var(--font-head);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 800; color: var(--white);
+  line-height: 1; margin-bottom: 0.1em;
+  letter-spacing: -0.03em;
+}
+.stat-card .stat-label {
+  font-family: var(--font-head);
+  font-size: clamp(9px, 0.9vw, 12px);
+  font-weight: 700; letter-spacing: 0.12em;
+  margin-bottom: 0.5em;
+}
+.stat-card .stat-desc {
+  font-size: clamp(10px, 0.85vw, 12px);
+  color: var(--text-secondary); line-height: 1.5;
+}
+
+/* --- S4: Photo grid --- */
+.photo-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.7vw; flex: 1; margin: 0.8em 0; min-height: 0;
+}
+.photo-grid img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 10px; display: block;
+  transition: transform 0.5s var(--ease-out);
+}
+.photo-grid img:hover {
+  transform: scale(1.02);
+}
+.location-pill {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.6em; width: fit-content; margin: 0.7em auto 0;
+  background: var(--bg-card); backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 100px;
+  padding: 0.55em 1.6em;
+  border-left: 3px solid var(--pink);
+  font-family: var(--font-head);
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 600; color: var(--white);
+  z-index: 2; position: relative;
+}
+
+/* --- S5: Houses grid --- */
+.houses-row {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1vw;
+}
+.house-card { padding: 1.3em; }
+.house-name {
+  font-family: var(--font-head);
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 700; color: var(--white);
+  line-height: 1.25; margin-bottom: 0.5em; margin-top: 0.4em;
+}
+.house-desc {
+  font-size: clamp(9px, 0.8vw, 11px);
+  color: var(--text-secondary); line-height: 1.55;
+}
+
+/* --- S5: TECH TOWN reveal --- */
+.reveal-title {
+  font-size: clamp(52px, 7vw, 90px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--green) 0%, var(--pink) 50%, var(--blue) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientText 6s ease infinite;
+  position: relative; z-index: 2;
+}
+@keyframes gradientText {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* --- S6: Benefits --- */
+.benefits-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.2vw;
+}
+
+/* --- S7: Packages --- */
+.packages-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.2vw;
+}
+.pkg-list { list-style: none; margin-top: 0.7em; }
+.pkg-list li {
+  font-size: clamp(10px, 0.9vw, 13px);
+  color: var(--text-secondary);
+  padding: 0.35em 0;
+  line-height: 1.45;
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.pkg-list li:last-child { border-bottom: none; }
+.pkg-price {
+  font-family: var(--font-head);
+  font-weight: 700; font-size: 0.95em;
+  padding: 0.15em 0.5em;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.04);
+  flex-shrink: 0; margin-left: 0.5em;
+}
+
+/* --- S8: Premium table --- */
+.premium-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  position: relative; z-index: 2;
+}
+.premium-table thead th {
+  background: var(--green);
+  color: #000;
+  font-family: var(--font-head);
+  font-weight: 700; font-size: clamp(9px, 0.85vw, 11px);
+  padding: 0.75em 1.2em;
+  text-align: left;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.premium-table thead th:first-child { border-radius: 10px 0 0 0; }
+.premium-table thead th:last-child  { border-radius: 0 10px 0 0; text-align: center; }
+.premium-table thead th:nth-child(2) { text-align: center; }
+.premium-table tbody tr {
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+  transition: background 0.2s ease;
+}
+.premium-table tbody tr:hover {
+  background: rgba(255,255,255,0.02);
+}
+.premium-table tbody td {
+  padding: 0.65em 1.2em;
+  font-size: clamp(10px, 0.95vw, 13px);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.premium-table tbody td:nth-child(2) {
+  text-align: center;
+}
+.premium-table tbody td:last-child {
+  text-align: center; color: var(--text-secondary);
+  font-size: 0.9em;
+}
+.premium-table tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+.premium-table tbody tr:last-child td:last-child  { border-radius: 0 0 10px 0; }
+.premium-table tbody tr:last-child { border-bottom: none; }
+
+.price-tag {
+  display: inline-block;
+  background: rgba(0,230,118,0.1);
+  color: var(--green);
+  font-family: var(--font-head);
+  font-weight: 700;
+  padding: 0.2em 0.6em;
+  border-radius: 6px;
+  font-size: 0.95em;
+}
+
+/* --- S9: Pricing --- */
+.pricing-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr;
+  gap: 3.5vw; align-items: start;
+}
+.price-table-light thead th {
+  background: var(--green); color: #000;
+  font-family: var(--font-head); font-weight: 700;
+  font-size: clamp(9px, 0.85vw, 11px); padding: 0.65em 1em;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.price-table-light thead th:first-child { border-radius: 10px 0 0 0; text-align: left; }
+.price-table-light thead th:last-child  { border-radius: 0 10px 0 0; text-align: right; }
+.price-table-light tbody td {
+  padding: 0.55em 1em; font-size: clamp(10px, 0.9vw, 13px);
+}
+.price-table-light tbody tr:nth-child(odd) td  { background: rgba(255,255,255,0.95); color: #111; }
+.price-table-light tbody tr:nth-child(even) td { background: rgba(240,240,240,0.95); color: #111; }
+.price-table-light tbody td:last-child { text-align: right; font-weight: 600; }
+.price-table-light tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+.price-table-light tbody tr:last-child td:last-child  { border-radius: 0 0 10px 0; }
+.price-table-light { border-collapse: separate; border-spacing: 0; width: 100%; }
+
+.total-strip {
+  background: var(--bg-card-solid); border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 0.65em 1.3em;
+  display: flex; align-items: center; gap: 0.5em;
+  margin-top: 0.8em;
+}
+.total-strip .amt {
+  font-family: var(--font-head); font-size: clamp(13px, 1.2vw, 17px);
+  font-weight: 700; color: var(--white);
+}
+.total-strip .note { font-size: 0.85em; color: var(--text-secondary); }
+
+.deal-strip {
+  background: var(--green); border-radius: 10px;
+  padding: 0.75em 1.3em; margin-top: 0.5em;
+}
+.deal-strip .amt {
+  font-family: var(--font-head);
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 800; color: #000;
+}
+
+.eb-card {
+  background: #fff; border-radius: 14px;
+  padding: 2em; position: relative;
+  overflow: hidden; color: #111;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+}
+.eb-card .bar-pink {
+  position: absolute; top: 0; left: 2em; right: 2em;
+  height: 3px; background: var(--pink);
+  border-radius: 0 0 2px 2px;
+}
+.eb-card h3 {
+  font-size: clamp(13px, 1.2vw, 16px);
+  font-weight: 800; color: #111; margin-bottom: 1.4em;
+  letter-spacing: 0.03em;
+}
+.tier { margin-bottom: 1.2em; }
+.tier-name { font-family: var(--font-head); font-size: clamp(11px, 1vw, 14px); font-weight: 700; }
+.tier-date { font-size: clamp(9px, 0.75vw, 11px); color: var(--text-secondary); margin: 0.1em 0; }
+.tier-val { font-family: var(--font-head); font-size: clamp(14px, 1.3vw, 18px); font-weight: 800; }
+.tier-val.green { color: var(--green-dim); }
+.tier-val.blue  { color: var(--blue); }
+.tier-val.dark  { color: #111; }
+.eb-note { font-size: clamp(8px, 0.7vw, 10px); color: #999; margin-top: 1em; }
+
+/* --- S10: CTA --- */
+.lockup {
+  display: flex; align-items: baseline;
+  gap: 0.3em; flex-wrap: wrap;
+  margin-top: 0.6em; position: relative; z-index: 2;
+}
+.lockup-name {
+  font-family: var(--font-head);
+  font-size: clamp(22px, 2.8vw, 36px);
+  font-weight: 800; color: var(--white);
+}
+.lockup-name sup { font-size: 0.45em; }
+.lockup-x {
+  font-size: clamp(18px, 2vw, 26px);
+  color: var(--text-muted); margin: 0 0.4em;
+}
+.lockup-blank {
+  font-family: var(--font-head);
+  font-size: clamp(22px, 2.8vw, 36px);
+  font-weight: 300; color: var(--white);
+  border-bottom: 2px solid var(--text-xmuted);
+  min-width: 200px; padding-bottom: 0.05em;
+  animation: blinkCaret 2s step-end infinite;
+}
+@keyframes blinkCaret {
+  50% { border-color: transparent; }
+}
+
+/* --- S11: Contact --- */
+#s11 .content {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5vw; align-items: center;
+  height: 100%; position: relative; z-index: 2;
+}
+.contact-col { display: flex; flex-direction: column; justify-content: center; }
+.contact-name {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700; margin-bottom: 0.1em;
+}
+.contact-role {
+  font-size: clamp(13px, 1.2vw, 16px);
+  color: var(--text-secondary); margin-bottom: 1.5em;
+}
+.contact-row {
+  display: flex; align-items: center;
+  gap: 0.8em; margin-bottom: 0.9em;
+}
+.contact-dot {
+  width: 6px; height: 6px;
+  border-radius: 2px;
+  background: var(--green);
+  flex-shrink: 0;
+}
+.contact-row a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: clamp(12px, 1.1vw, 15px);
+  transition: color 0.2s;
+}
+.contact-row a:hover { color: var(--green); }
+.contact-row.muted a { color: var(--text-secondary); }
+.contact-row.green a { color: var(--green); }
+#s11 .photo-col {
+  display: flex; align-items: center; justify-content: center;
+}
+#s11 .photo-wrap {
+  position: relative; width: 100%; max-width: 400px;
+}
+#s11 .photo-wrap .frame-bg {
+  position: absolute;
+  top: 8px; left: -8px; bottom: -8px; right: 8px;
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: 12px; border-left: 3px solid var(--green);
+}
+#s11 .photo-wrap img {
+  position: relative; width: 100%;
+  border-radius: 10px; display: block;
+  object-fit: cover; max-height: 74vh;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   12. RESPONSIVE
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .slide { padding: 4vh 5vw; }
+  #s1 .content, #s11 .content { grid-template-columns: 1fr; }
+  #s1 .photo-col, #s11 .photo-col { display: none; }
+  .houses-row { grid-template-columns: repeat(3, 1fr); }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .photo-strip { grid-template-columns: 1fr 1fr; }
+  .photo-strip .hide-mobile { display: none; }
+  #slide-nav { display: none; }
+}
+@media (max-width: 640px) {
+  .benefits-grid, .packages-grid { grid-template-columns: 1fr; }
+  .houses-row { grid-template-columns: 1fr 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   13. REDUCED MOTION
+   ════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .anim, .anim-scale, .anim-left { opacity: 1; transform: none; filter: none; }
+  .accent-line { transform: scaleX(1); }
+  .slide .top-bar, .slide .left-strip, .slide .bottom-bar { transform: none; }
+  .photo-strip img { filter: none; }
+  #loader { display: none; }
+}
+</style>
+</head>
+<body class="loading">
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-brand">MXTW</div>
+  <div class="loader-track"><div class="loader-fill"></div></div>
+</div>
+
+<!-- Noise grain overlay -->
+<div id="noise"></div>
+
+<!-- Cursor glow -->
+<div id="cursor-glow"></div>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Navigation -->
+<nav id="slide-nav"></nav>
+<div id="slide-counter"><span class="current">01</span> / 11</div>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S1 — TITLE
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s1">
+  <div class="top-bar"></div>
+  <div class="left-strip" style="background:var(--pink)"></div>
+  <div class="bottom-bar" style="background:var(--pink)"></div>
+  <div class="ambient glow-green" style="width:700px;height:700px;right:-250px;bottom:-150px;"></div>
+  <div class="ambient" style="width:500px;height:500px;right:100px;top:-200px;background:rgba(255,107,157,0.05);"></div>
+
+  <div class="content">
+    <div class="title-col">
+      <div class="overline anim">Sponsor Deck</div>
+      <h1 class="hero-title anim d1">Mexico Tech<sup style="font-size:0.35em;vertical-align:super">&reg;</sup></h1>
+      <h1 class="hero-title anim d2">Week 2026</h1>
+      <div class="accent-line green d3" style="width:90px;margin:1em 0;"></div>
+      <p class="sub-label anim d4">Sponsor Deck</p>
+      <div class="accent-line pink d5" style="width:40px;height:2px;margin-top:0.5em;"></div>
+    </div>
+    <div class="photo-col anim-scale d3">
+      <div class="photo-wrap">
+        <div class="frame-bg"></div>
+        <img src="mxtw_images/slide1_Google_Shape_22_p1.jpeg" alt="Mexico Tech Week" loading="eager">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S2 — ABOUT
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s2">
+  <div class="top-bar"></div>
+  <div class="left-strip" style="background:var(--green)"></div>
+  <div class="ambient glow-green" style="width:500px;height:500px;left:-200px;top:-100px;"></div>
+
+  <div class="overline anim">Mexico Tech Week</div>
+  <h2 class="section-title anim d1" style="font-size:clamp(30px,4.2vw,52px);max-width:85%;">
+    La celebraci&oacute;n m&aacute;s vibrante<br>
+    del <strong>ecosistema tecnol&oacute;gico</strong><br>
+    en M&eacute;xico.
+  </h2>
+  <div class="accent-line green d2" style="width:80px;margin:1em 0;"></div>
+  <p class="body-lg anim d3" style="margin-bottom:2.2em;">
+    Mexico Tech Week es una <span style="color:var(--pink);font-weight:600;">unconference</span> creada por y para la
+    comunidad tecnol&oacute;gica. Durante una semana completa, cientos de eventos
+    auto-organizados se activan simult&aacute;neamente en toda la Ciudad de M&eacute;xico.
+  </p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw;max-width:920px;">
+    <div class="glass anim d4">
+      <div class="bar-top" style="background:var(--green)"></div>
+      <div class="glass-title">Comunidad Primero</div>
+      <div class="glass-body">Co-creaci&oacute;n y empoderamiento local</div>
+    </div>
+    <div class="glass anim d5">
+      <div class="bar-top" style="background:var(--pink)"></div>
+      <div class="glass-title">Ambici&oacute;n Mexicana</div>
+      <div class="glass-body">Historias que inspiran, calidad world-class</div>
+    </div>
+    <div class="glass anim d6">
+      <div class="bar-top" style="background:var(--blue)"></div>
+      <div class="glass-title">Inclusi&oacute;n Radical</div>
+      <div class="glass-body">Acceso, diversidad, nadie se queda atr&aacute;s</div>
+    </div>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S3 — 2025 RESULTS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s3">
+  <div class="top-bar"></div>
+  <div class="overline anim">MXTW 2025</div>
+  <h2 class="section-title anim d1" style="margin-bottom:0.5em;">En 2025 abrimos muchas puertas</h2>
+
+  <div class="photo-strip anim-scale d2">
+    <img src="mxtw_images/slide3_Google_Shape_45_p3.jpeg" alt="MXTW 2025">
+    <img src="mxtw_images/slide3_Google_Shape_46_p3.jpeg" alt="MXTW 2025">
+    <img src="mxtw_images/slide3_Google_Shape_47_p3.jpeg" alt="MXTW 2025" class="hide-mobile">
+  </div>
+
+  <div class="stats-row">
+    <div class="glass stat-card anim d3">
+      <div class="stat-dot" style="background:var(--green)"></div>
+      <div class="stat-number" data-count="400" data-prefix="+">0</div>
+      <div class="stat-label" style="color:var(--green)">EVENTOS</div>
+      <div class="stat-desc">Organizados por la comunidad</div>
+    </div>
+    <div class="glass stat-card anim d4">
+      <div class="stat-dot" style="background:var(--pink)"></div>
+      <div class="stat-number" data-count="15" data-prefix="+" data-suffix="K">0</div>
+      <div class="stat-label" style="color:var(--pink)">ASISTENTES</div>
+      <div class="stat-desc">Crecimiento del +87% vs 2024</div>
+    </div>
+    <div class="glass stat-card anim d5">
+      <div class="stat-dot" style="background:var(--blue)"></div>
+      <div class="stat-number" style="font-size:clamp(32px,3.8vw,48px);">TECH<br>HOUSE</div>
+      <div class="stat-label" style="color:var(--blue)">&nbsp;</div>
+      <div class="stat-desc">Hub para crear mayor engagement</div>
+    </div>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S4 — TECH HOUSE 2025
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s4" style="display:flex;flex-direction:column;">
+  <div class="top-bar pink"></div>
+
+  <div class="overline pink anim">Tech House 2025</div>
+  <h2 class="section-title anim d1" style="font-size:clamp(22px,2.8vw,36px);margin-bottom:0.4em;">
+    Un espacio para conectar, crear y celebrar.
+  </h2>
+
+  <div class="photo-grid anim-scale d2">
+    <img src="mxtw_images/slide4_Google_Shape_66_p4.jpeg" alt="Tech House">
+    <img src="mxtw_images/slide4_Google_Shape_67_p4.jpeg" alt="Tech House">
+    <img src="mxtw_images/slide4_Google_Shape_68_p4.jpeg" alt="Tech House">
+    <img src="mxtw_images/slide4_Google_Shape_69_p4.jpeg" alt="Tech House">
+  </div>
+
+  <div class="location-pill anim d3">Tech House &bull; Medellin 65, Roma</div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S5 — TECH TOWN 2026
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s5">
+  <div class="top-bar"></div>
+  <div class="left-strip" style="background:var(--green)"></div>
+  <div class="ambient glow-green" style="width:600px;height:600px;left:-200px;top:-100px;"></div>
+  <div class="ambient" style="width:500px;height:500px;right:-100px;bottom:-100px;background:rgba(255,107,157,0.05);"></div>
+
+  <div class="overline anim">MXTW 2026</div>
+  <p class="body-lg anim d1" style="margin-bottom:0.2em;color:var(--text-secondary);">Presentamos...</p>
+  <h1 class="reveal-title anim-scale d2" style="margin-bottom:0.15em;">TECH TOWN</h1>
+  <div class="accent-line pink d3" style="width:100px;margin:0.6em 0 0.8em;"></div>
+  <p class="body-lg anim d3" style="color:var(--white);margin-bottom:0.2em;">
+    Casas coloniales en la Roma con tem&aacute;ticas dedicadas.
+  </p>
+  <p class="body-sm anim d4" style="max-width:58ch;margin-bottom:1.6em;">
+    En 2026, Mexico Tech Week evoluciona hacia un formato de &ldquo;Tech Town&rdquo;: un cl&uacute;ster
+    de casas coloniales en las colonias Roma y Condesa, cada una dedicada a una vertical del
+    ecosistema tech. Una experiencia inmersiva de una semana completa.
+  </p>
+
+  <div class="houses-row">
+    <div class="glass house-card anim d3"><div class="bar-top" style="background:var(--blue)"></div><div class="house-name">DEV<br>HOUSE</div><div class="house-desc">Hackathons, workshops, coding lounges</div></div>
+    <div class="glass house-card anim d4"><div class="bar-top" style="background:var(--orange)"></div><div class="house-name">FOUNDER<br>HOUSE</div><div class="house-desc">Pitch practice, mentorship, fundraising</div></div>
+    <div class="glass house-card anim d5"><div class="bar-top" style="background:var(--green)"></div><div class="house-name">INVESTOR<br>HOUSE</div><div class="house-desc">Deal flow, LP panels, curated intros</div></div>
+    <div class="glass house-card anim d6"><div class="bar-top" style="background:var(--yellow)"></div><div class="house-name">FINTECH &amp;<br>CRYPTO</div><div class="house-desc">DeFi labs, payments, regulation</div></div>
+    <div class="glass house-card anim d7"><div class="bar-top" style="background:var(--pink)"></div><div class="house-name">SOCIAL &amp;<br>WELLNESS</div><div class="house-desc">Yoga, meditation, mindful leadership</div></div>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S6 — WHY SPONSOR
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s6">
+  <div class="top-bar"></div>
+  <div class="overline anim">Por Qu&eacute; Patrocinar</div>
+  <h2 class="section-title anim d1" style="font-size:clamp(26px,3.5vw,44px);margin-bottom:0.8em;">
+    Conecta tu marca con el ecosistema<br>
+    <span class="text-green">tecnol&oacute;gico de M&eacute;xico.</span>
+  </h2>
+
+  <div class="benefits-grid">
+    <div class="glass anim d2" style="padding-left:2em;">
+      <div class="bar-left" style="background:var(--blue)"></div>
+      <div class="glass-title">Audiencia Premium</div>
+      <div class="glass-body">Founders, CTOs, VPs Engineering, inversores y decision-makers del ecosistema tech latinoamericano.</div>
+    </div>
+    <div class="glass anim d3" style="padding-left:2em;">
+      <div class="bar-left" style="background:var(--green)"></div>
+      <div class="glass-title">Engagement Real</div>
+      <div class="glass-body">No es una conferencia m&aacute;s. Formato inmersivo de una semana con interacciones org&aacute;nicas y de alto valor.</div>
+    </div>
+    <div class="glass anim d4" style="padding-left:2em;">
+      <div class="bar-left" style="background:var(--pink)"></div>
+      <div class="glass-title">Visibilidad de Marca</div>
+      <div class="glass-body">Presencia en m&uacute;ltiples touchpoints: casas tem&aacute;ticas, digital, PR, newsletters, redes sociales y eventos.</div>
+    </div>
+    <div class="glass anim d5" style="padding-left:2em;">
+      <div class="bar-left" style="background:var(--orange)"></div>
+      <div class="glass-title">Networking Curado</div>
+      <div class="glass-body">Acceso directo a comunidades verticales: dev, fintech, founders, inversores y bienestar corporativo.</div>
+    </div>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S7 — PACKAGES
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s7">
+  <div class="top-bar pink"></div>
+  <div class="left-strip" style="background:var(--pink)"></div>
+
+  <div class="overline pink anim">Paquetes de Patrocinio</div>
+  <h2 class="section-title anim d1" style="font-size:clamp(24px,3vw,38px);">
+    Paquetes flexibles <span class="text-gray">adaptados a tus necesidades.</span>
+  </h2>
+  <p class="body-sm anim d2" style="margin-bottom:1.4em;max-width:56ch;">
+    Nuestro modelo LEGO te permite armar el paquete perfecto para tu marca.
+    Todos los precios en USD, no incluyen IVA.
+  </p>
+
+  <div class="packages-grid">
+    <div class="glass anim d3">
+      <div class="bar-top" style="background:var(--green)"></div>
+      <div class="glass-title">Branding &amp; Presencia</div>
+      <ul class="pkg-list">
+        <li><span>Title Sponsor + Hero</span><span class="pkg-price" style="color:var(--green)">$80,000</span></li>
+        <li><span>House Lead Sponsor (3 d&iacute;as)</span><span class="pkg-price" style="color:var(--green)">$60,000</span></li>
+        <li><span>Country Sponsor (1 d&iacute;a)</span><span class="pkg-price" style="color:var(--green)">$25,000</span></li>
+        <li><span>Permanent Activation Sponsor</span><span class="pkg-price" style="color:var(--green)">$25,000</span></li>
+      </ul>
+    </div>
+    <div class="glass anim d4">
+      <div class="bar-top" style="background:var(--blue)"></div>
+      <div class="glass-title">Eventos &amp; Activaciones</div>
+      <ul class="pkg-list">
+        <li><span>House Activation (1 d&iacute;a)</span><span class="pkg-price" style="color:var(--blue)">$10,000</span></li>
+        <li><span>Community Partner / Host</span><span class="pkg-price" style="color:var(--blue)">$4,000</span></li>
+        <li><span>Main Kick-off Sponsor</span><span class="pkg-price" style="color:var(--blue)">$30,000</span></li>
+        <li><span>VIP Kick-off Sponsor</span><span class="pkg-price" style="color:var(--blue)">$30,000</span></li>
+      </ul>
+    </div>
+    <div class="glass anim d5">
+      <div class="bar-top" style="background:var(--pink)"></div>
+      <div class="glass-title">Digital &amp; Comunicaciones</div>
+      <ul class="pkg-list">
+        <li><span>Website Ribbon Banner</span><span class="pkg-price" style="color:var(--pink)">$5,000</span></li>
+        <li><span>Dedicated Website Section</span><span class="pkg-price" style="color:var(--pink)">$8,000</span></li>
+        <li><span>Newsletter Feature</span><span class="pkg-price" style="color:var(--pink)">$5,000</span></li>
+        <li><span>Sponsor Announcement Post</span><span class="pkg-price" style="color:var(--pink)">$3,500</span></li>
+      </ul>
+    </div>
+    <div class="glass anim d6">
+      <div class="bar-top" style="background:var(--orange)"></div>
+      <div class="glass-title">Networking &amp; Datos</div>
+      <ul class="pkg-list">
+        <li><span>Soft Landing Tour (10 startups)</span><span class="pkg-price" style="color:var(--orange)">$30,000</span></li>
+        <li><span>House Database Access</span><span class="pkg-price" style="color:var(--orange)">$10,000</span></li>
+        <li><span>Industry Track Sponsor</span><span class="pkg-price" style="color:var(--orange)">$2,000</span></li>
+        <li><span>City Guide Sponsor</span><span class="pkg-price" style="color:var(--orange)">$2,500</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S8 — ADD-ONS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s8">
+  <div class="top-bar pink"></div>
+  <div class="left-strip" style="background:var(--pink)"></div>
+
+  <div class="overline pink anim">M&aacute;s Bloques Disponibles</div>
+  <h2 class="section-title anim d1" style="font-size:clamp(22px,2.5vw,32px);margin-bottom:0.9em;">
+    Complementa tu paquete con estos add-ons:
+  </h2>
+
+  <div class="anim d2" style="overflow-x:auto;position:relative;z-index:2;">
+    <table class="premium-table">
+      <thead><tr><th>Bloque</th><th>Precio USD</th><th>Exclusividad</th></tr></thead>
+      <tbody>
+        <tr><td>Sponsored Video Feature</td><td><span class="price-tag">$5,000</span></td><td>Max 5</td></tr>
+        <tr><td>Sponsored Interview (Written)</td><td><span class="price-tag">$3,500</span></td><td>Max 3</td></tr>
+        <tr><td>Recap Content Inclusion</td><td><span class="price-tag">$3,000</span></td><td>Max 10</td></tr>
+        <tr><td>Newsletter Bundle (3 env&iacute;os)</td><td><span class="price-tag">$12,000</span></td><td>Max 3</td></tr>
+        <tr><td>Featured Event Placement</td><td><span class="price-tag">$1,000</span></td><td>Max 10</td></tr>
+        <tr><td>SWAG Bag Sponsor</td><td><span class="price-tag">$10,000</span></td><td>Solo 1</td></tr>
+        <tr><td>SWAG Item Inclusion</td><td><span class="price-tag">$1,000</span></td><td>Max 5</td></tr>
+        <tr><td>Lanyard Sponsor</td><td><span class="price-tag">$5,000</span></td><td>Solo 1</td></tr>
+        <tr><td>Badge Sponsor</td><td><span class="price-tag">$3,000</span></td><td>Solo 1</td></tr>
+        <tr><td>Water/Coffee Station (semana)</td><td><span class="price-tag">$2,500</span></td><td>1 por casa</td></tr>
+        <tr><td>Lunch/Dinner Sponsor (d&iacute;a)</td><td><span class="price-tag">$1,000</span></td><td>1/d&iacute;a/casa</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S9 — PRICING
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s9">
+  <div class="top-bar"></div>
+  <div class="overline anim">Propuesta Econ&oacute;mica</div>
+  <h2 class="section-title anim d1" style="font-size:clamp(22px,2.5vw,34px);margin-bottom:0.9em;">
+    Ejemplo de paquete personalizado
+  </h2>
+
+  <div class="pricing-grid">
+    <div>
+      <div class="anim d2" style="overflow-x:auto;">
+        <table class="price-table-light">
+          <thead><tr><th>Bloque</th><th>Precio USD</th></tr></thead>
+          <tbody>
+            <tr><td>Official Country Sponsor (1 d&iacute;a)</td><td>$25,000</td></tr>
+            <tr><td>Website Ribbon Banner</td><td>$5,000</td></tr>
+            <tr><td>Dedicated Section in MXTW Website</td><td>$8,000</td></tr>
+            <tr><td>Soft Landing Tour (10 startups)</td><td>$30,000</td></tr>
+            <tr><td>Sponsor Announcement Post</td><td>$3,500</td></tr>
+            <tr><td>Sponsored Interview (Written)</td><td>$3,500</td></tr>
+            <tr><td>Recap Content Inclusion</td><td>$3,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="total-strip anim d3">
+        <span class="amt">VALOR TOTAL: $78,000 USD</span>
+        <span class="note">(+IVA)</span>
+      </div>
+      <div class="deal-strip anim d4">
+        <span class="amt">PRECIO PAQUETE: $70,000 USD (+IVA)</span>
+      </div>
+    </div>
+
+    <div class="eb-card anim-scale d3">
+      <div class="bar-pink"></div>
+      <h3>EARLY BIRD PRICING</h3>
+      <div class="tier"><div class="tier-name">Super Early Bird</div><div class="tier-date">Antes del 1 de Abril, 2026</div><div class="tier-val green">$60,000 USD (+IVA)</div></div>
+      <div class="tier"><div class="tier-name">Early Bird</div><div class="tier-date">Antes del 1 de Julio, 2026</div><div class="tier-val blue">$65,000 USD (+IVA)</div></div>
+      <div class="tier"><div class="tier-name">Precio Regular</div><div class="tier-val dark">$70,000 USD (+IVA)</div></div>
+      <p class="eb-note">*Los precios no incluyen IVA. Todos los bloques son personalizables.</p>
+    </div>
+  </div>
+  <div class="slide-foot">MXTW 2026</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S10 — CTA
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s10">
+  <div class="top-bar"></div>
+  <div class="left-strip" style="background:var(--pink)"></div>
+  <div class="bottom-bar" style="background:var(--pink)"></div>
+  <div class="ambient glow-green" style="width:900px;height:900px;left:-350px;top:-250px;"></div>
+  <div class="ambient" style="width:700px;height:700px;right:-200px;bottom:-150px;background:rgba(255,107,157,0.06);"></div>
+
+  <h2 class="section-title anim" style="font-size:clamp(26px,3.8vw,46px);line-height:1.3;max-width:78%;">
+    Co-creemos la plataforma que<br>
+    expanda las puertas de la<br>
+    tecnolog&iacute;a en M&eacute;xico,<br>
+    <strong>contigo al frente.</strong>
+  </h2>
+  <div class="accent-line green d1" style="width:90px;margin:1em 0;"></div>
+
+  <div class="lockup anim d2">
+    <span class="lockup-name">Mexico Tech<sup>&reg;</sup></span>
+    <span class="lockup-x">&times;</span>
+    <span class="lockup-blank">&nbsp;</span>
+  </div>
+  <p class="body-lg anim d3" style="margin-top:1em;color:var(--text-secondary);">
+    <em>&iexcl;Esta es tu se&ntilde;al!</em>
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     S11 — CONTACT
+     ══════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s11">
+  <div class="top-bar"></div>
+  <div class="left-strip" style="background:var(--green)"></div>
+  <div class="bottom-bar" style="background:var(--green)"></div>
+
+  <div class="content">
+    <div class="contact-col">
+      <div class="overline anim">Contacto</div>
+      <h2 class="hero-title anim d1" style="font-size:clamp(34px,4.8vw,56px);">Mexico Tech<sup style="font-size:0.35em;vertical-align:super">&reg;</sup></h2>
+      <h2 class="hero-title anim d1" style="font-size:clamp(34px,4.8vw,56px);margin-bottom:0.4em;">Week 2026</h2>
+      <div class="accent-line green d2" style="width:70px;margin:0.8em 0;"></div>
+      <h3 class="contact-name anim d3">Victor Noguera</h3>
+      <p class="contact-role anim d3">Co-Founder</p>
+      <div class="contact-row anim d4"><div class="contact-dot"></div><a href="mailto:victor.noguera@gmail.com">victor.noguera@gmail.com</a></div>
+      <div class="contact-row muted anim d5"><div class="contact-dot"></div><a href="#">WhatsApp: 55 8233 8940</a></div>
+      <div class="contact-row green anim d6"><div class="contact-dot"></div><a href="https://mexicotechweek.com">mexicotechweek.com</a></div>
+    </div>
+    <div class="photo-col anim-scale d3">
+      <div class="photo-wrap">
+        <div class="frame-bg"></div>
+        <img src="mxtw_images/slide11_Google_Shape_206_p11.jpeg" alt="Mexico Tech Week">
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  'use strict';
+
+  // ── NOISE GRAIN ──
+  function generateNoise() {
+    const c = document.createElement('canvas');
+    c.width = 200; c.height = 200;
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(200, 200);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = Math.random() * 255;
+      img.data[i] = img.data[i+1] = img.data[i+2] = v;
+      img.data[i+3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    document.getElementById('noise').style.backgroundImage = `url(${c.toDataURL('image/png')})`;
+  }
+  generateNoise();
+
+  // ── LOADER ──
+  const loader = document.getElementById('loader');
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      document.body.classList.remove('loading');
+    }, 1600);
+  });
+
+  // ── CURSOR GLOW ──
+  const isMobile = window.matchMedia('(pointer: coarse)').matches;
+  if (!isMobile) {
+    document.addEventListener('mousemove', (e) => {
+      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    });
+  } else {
+    document.getElementById('cursor-glow').style.display = 'none';
+  }
+
+  // ── SLIDES & NAV ──
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const nav = document.getElementById('slide-nav');
+  const counter = document.getElementById('slide-counter');
+  const progress = document.getElementById('progress-bar');
+  const labels = ['Title','About','2025','Tech House','Tech Town','Why Sponsor','Packages','Add-ons','Pricing','CTA','Contact'];
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.innerHTML = `<span class="tooltip">${labels[i] || ''}</span>`;
+    dot.addEventListener('click', () => slides[i].scrollIntoView({ behavior: 'smooth' }));
+    nav.appendChild(dot);
+  });
+  const dots = nav.querySelectorAll('.nav-dot');
+
+  let current = 0;
+
+  function setActive(idx) {
+    current = idx;
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    counter.innerHTML = `<span class="current">${String(idx + 1).padStart(2, '0')}</span> / ${String(total).padStart(2, '0')}`;
+    progress.style.width = ((idx + 1) / total * 100) + '%';
+  }
+
+  // ── INTERSECTION OBSERVER — in-view + animations ──
+  const viewObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const slide = entry.target;
+        slide.classList.add('in-view');
+        const idx = Array.from(slides).indexOf(slide);
+        setActive(idx);
+
+        // Trigger entrance animations
+        slide.querySelectorAll('.anim, .anim-scale, .anim-left').forEach(el => el.classList.add('vis'));
+        // Draw accent lines
+        slide.querySelectorAll('.accent-line').forEach(el => el.classList.add('draw'));
+        // Count up
+        slide.querySelectorAll('.stat-number[data-count]').forEach(el => {
+          if (el.dataset.counted) return;
+          el.dataset.counted = '1';
+          countUp(el, parseInt(el.dataset.count), el.dataset.prefix || '', el.dataset.suffix || '');
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  slides.forEach(s => viewObs.observe(s));
+
+  // ── COUNT UP ──
+  function countUp(el, target, prefix, suffix, duration = 1800) {
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      el.textContent = prefix + Math.floor(target * ease).toLocaleString() + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ── CARD TILT ──
+  if (!isMobile) {
+    document.querySelectorAll('.glass').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        const tiltX = (y - 0.5) * -6;
+        const tiltY = (x - 0.5) * 6;
+        card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-2px)`;
+        card.style.setProperty('--card-mx', (x * 100) + '%');
+        card.style.setProperty('--card-my', (y * 100) + '%');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  // ── KEYBOARD NAV ──
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      if (current < total - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      slides[0].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      slides[total - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  // ── SCROLL TRACKER (sync currentSlide with scroll) ──
+  const scrollObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        current = Array.from(slides).indexOf(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => scrollObs.observe(s));
+
+  // ── INITIAL TRIGGER ──
+  setTimeout(() => {
+    slides[0].classList.add('in-view');
+    slides[0].querySelectorAll('.anim, .anim-scale, .anim-left').forEach(el => el.classList.add('vis'));
+    slides[0].querySelectorAll('.accent-line').forEach(el => el.classList.add('draw'));
+  }, 1800);
+
+})();
+</script>
+</body>
+</html>
